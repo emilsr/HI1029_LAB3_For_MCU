@@ -11,7 +11,7 @@ OBJ_FILES := $(patsubst $(SRC_DIR)/%.c,$(OUT_DIR)/%.o,$(SRC_FILES))
 ifeq ($(OS), Windows_NT)
 	# Windows specific
 	BIN_EXT =.exe
-	CFLAGS +=-lmingw32 -mwindows
+	CFLAGS +=-lmingw32
 	MKDIR = powershell -Command "if (!(Test-Path -Path $(OUT_DIR) -PathType Container)) { New-Item -ItemType Directory -Path $(OUT_DIR) }"
 	RM = del /Q
 else
