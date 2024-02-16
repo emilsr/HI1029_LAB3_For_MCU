@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -Wpedantic
+CFLAGS=-O3 -march=native -funroll-loops -fomit-frame-pointer -finline-functions -Wall -Wpedantic
 
 SRC_DIR=src
 OUT_DIR=out
