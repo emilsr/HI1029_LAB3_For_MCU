@@ -1,6 +1,6 @@
-#include<stdio.h>
-#include<stdint.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
 #include <time.h>
 
 #define DIRECTION_N 1
@@ -27,7 +27,7 @@ Grid *createGrid(uint8_t rows, uint8_t cols) {
     newGrid->rows = rows;
     newGrid->cols = cols;
     newGrid->bitsPerChar = sizeof(char) * 8;
-    newGrid->size = (int)((rows * cols) / newGrid->bitsPerChar) + 1; // Adding 1 to ensure we have enough space
+    newGrid->size = (int)((rows * cols) / newGrid->bitsPerChar) + 1;
     newGrid->grid = (uint8_t *)calloc(newGrid->size, sizeof(uint8_t));
     if (newGrid->grid == NULL) {
         perror("Memory allocation failed");
@@ -207,9 +207,10 @@ uint8_t solve(Grid *grid, uint8_t row, uint8_t col, uint8_t piecesPlaced) {
     return solutions + solve(grid, row, col + 1, piecesPlaced);
 }
 
-int main(int argc, char **argv) {
+void getSolutions(uint8_t row, uint8_t col){
+    printf("%d,%d\t:\t", row+1, col+1);
     Grid *pGrid = createGrid(5,5);
-    set(pGrid, 0, 2);
+    set(pGrid, row, col);
 
     clock_t start = clock();
     uint8_t solutions = solve(pGrid, 0, 0, 0);
@@ -217,8 +218,16 @@ int main(int argc, char **argv) {
     
     double time_taken = ((double)(end - start)) * 1000 / CLOCKS_PER_SEC;
 
-    printf("Found: %d solutions\n", solutions);
-    printf("Time taken: %f milliseconds\n", time_taken);
+    printf("Found: %d solutions\t", solutions);
+    printf("in: %f milliseconds\n", time_taken);
+}
+
+int main() {
+    for(uint8_t i = 0; i < 5; i++) {
+        for(uint8_t j = 0; j < 5; j++) {
+            getSolutions(i,j);
+        }
+    }
 
     return 0;
 }
