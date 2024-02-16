@@ -13,7 +13,6 @@ typedef struct {
     uint8_t *grid;
     uint8_t rows;
     uint8_t cols;
-    uint8_t bitsPerChar;
     uint8_t size;
 } Grid;
 
@@ -26,8 +25,8 @@ Grid *createGrid(uint8_t rows, uint8_t cols) {
     
     newGrid->rows = rows;
     newGrid->cols = cols;
-    newGrid->bitsPerChar = sizeof(char) * 8;
-    newGrid->size = (int)((rows * cols) / newGrid->bitsPerChar) + 1;
+    
+    newGrid->size = (uint8_t)((rows * cols) / 8) + 1;
     newGrid->grid = (uint8_t *)calloc(newGrid->size, sizeof(uint8_t));
     if (newGrid->grid == NULL) {
         perror("Memory allocation failed");
@@ -39,30 +38,30 @@ Grid *createGrid(uint8_t rows, uint8_t cols) {
 
 void set(Grid *grid, uint8_t row, uint8_t col) {
     int index = row * grid->cols + col;
-    int charIndex = index / grid->bitsPerChar;
-    int bitOffset = index % grid->bitsPerChar;
+    int charIndex = index / 8;
+    int bitOffset = index % 8;
     grid->grid[charIndex] |= (1 << bitOffset);
 }
 
 void clear(Grid *grid, uint8_t row, uint8_t col) {
     uint8_t index = row * grid->cols + col;
-    uint8_t charIndex = index / grid->bitsPerChar;
-    uint8_t bitOffset = index % grid->bitsPerChar;
+    uint8_t charIndex = index / 8;
+    uint8_t bitOffset = index % 8;
     grid->grid[charIndex] &= ~(1 << bitOffset);
 }
 
 uint8_t check(Grid *grid, uint8_t row, uint8_t col) {
     uint8_t index = row * grid->cols + col;
-    uint8_t charIndex = index / grid->bitsPerChar;
-    uint8_t bitOffset = index % grid->bitsPerChar;
+    uint8_t charIndex = index / 8;
+    uint8_t bitOffset = index % 8;
     return (grid->grid[charIndex] & (1 << bitOffset)) != 0;
 }
 
 uint8_t isSolved(Grid *grid) {
-    uint8_t lastRowBits = (grid->rows * grid->cols) % (grid->bitsPerChar);
+    uint8_t lastRowBits = (grid->rows * grid->cols) % (8);
     for (int i = 0; i < (grid->size - 1); i++) {
         if (grid->grid[i] != 0xFF) {
-            return 0; // false
+            return 0;
         }
     }
     uint8_t lastRowMask = (1 << lastRowBits) - 1;
@@ -71,7 +70,7 @@ uint8_t isSolved(Grid *grid) {
 
 uint8_t canPlace(Grid *grid, uint8_t row, uint8_t col, uint8_t direction) {
     if (row + 1 >= grid->rows || col + 1 >= grid->cols) {
-        return 0; // false
+        return 0;
     }
     
     switch (direction) {
@@ -92,9 +91,9 @@ uint8_t canPlace(Grid *grid, uint8_t row, uint8_t col, uint8_t direction) {
                     !check(grid, row, col + 1) &&
                     !check(grid, row + 1, col + 1)) ? 1 : 0;
         case 0: // NONE
-            return 0; // false
+            return 0;
         default:
-            return 0; // false
+            return 0;
     }
 }
 
