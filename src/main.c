@@ -211,14 +211,17 @@ void getSolutions(uint8_t row, uint8_t col){
     Grid *pGrid = createGrid(5,5);
     set(pGrid, row, col);
 
-    clock_t start = clock();
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+
     uint8_t solutions = solve(pGrid, 0, 0, 0);
-    clock_t end = clock();
-    
-    double time_taken = ((double)(end - start)) * 1000 / CLOCKS_PER_SEC;
+
+    clock_gettime(CLOCK_MONOTONIC, &end);
+
+    double elapsed_ns = (end.tv_sec - start.tv_sec) * 1e9 + (end.tv_nsec - start.tv_nsec);
 
     printf("Found: %d solutions\t", solutions);
-    printf("in: %f milliseconds\n", time_taken);
+    printf("in: %f nanoseconds\n", elapsed_ns);
 }
 
 int main() {
