@@ -78,10 +78,11 @@ uint8_t solve(uint32_t board, uint32_t pos, uint8_t piecesPlaced) {
 }
 
 void doSolve(uint32_t i) {
+    uint32_t board = put(0, i, 1);
     struct timespec start, end;
     clock_gettime(CLOCK_MONOTONIC, &start);
 
-    uint8_t solutions = solve((uint32_t)put(0, i, 1), (uint32_t)0, (uint8_t)0);
+    uint8_t solutions = solve(board, 0, 0);
 
     clock_gettime(CLOCK_MONOTONIC, &end);
 
@@ -96,7 +97,7 @@ void doSolveBench(uint32_t i, double times[25][40], int trial) {
     uint32_t board = put(0, i, 1);
     clock_gettime(CLOCK_MONOTONIC, &start);
 
-    uint8_t solutions = solve(board, 0, 0);
+    solve(board, 0, 0);
 
     clock_gettime(CLOCK_MONOTONIC, &end);
 
