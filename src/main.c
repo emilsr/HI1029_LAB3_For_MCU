@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <time.h>
+#include <float.h>
 
 #define PIECE_1 0b1100001
 #define PIECE_2 0b1100010
@@ -90,9 +91,58 @@ void doSolve(uint32_t i) {
     printf("in: %f nanoseconds\n", elapsed_ns);
 }
 
+void doSolveBench(uint32_t i, double times[25][40], int trial) {
+    struct timespec start, end;
+    uint32_t board = put(0, i, 1);
+    clock_gettime(CLOCK_MONOTONIC, &start);
+
+    uint8_t solutions = solve(board, 0, 0);
+
+    clock_gettime(CLOCK_MONOTONIC, &end);
+
+    double elapsed_ns = (end.tv_sec - start.tv_sec) * 1e9 + (end.tv_nsec - start.tv_nsec);
+    times[i][trial] = elapsed_ns;
+}
+
+void bench() {
+    double times[25][40] = {0};
+    int num_trials = 40;
+
+    for (int trial = 0; trial < num_trials; trial++) {
+        for (int i = 0; i < 25; i++) {
+            doSolveBench(i, times, trial);
+        }
+    }
+
+    printf("\nBenchmark Results:\n");
+    for (int i = 0; i < 25; i++) {
+        double sum = 0;
+        double max_time = 0;
+        double min_time = DBL_MAX; // Set initial min time to the highest possible double value
+
+        for (int trial = 0; trial < num_trials; trial++) {
+            double time = times[i][trial];
+            sum += time;
+            if (time > max_time) {
+                max_time = time;
+            }
+            if (time < min_time) {
+                min_time = time;
+            }
+        }
+
+        double avg_time = sum / num_trials;
+        printf("Position %d:\tAvg: %f ns,\tMax: %f ns,\tMin: %f ns\n", i, avg_time, max_time, min_time);
+    }
+}
+
 int main(int argc, char **argv) {
+    printf("DOING NORMAL SOLVING:\n");
     for(int i = 0; i < 25; i++) {
         doSolve(i);
     }
+    printf("Starting BENCHMARK:\n");
+    bench();
+    
     return 0;
 }
