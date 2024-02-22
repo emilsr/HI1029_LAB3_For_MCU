@@ -21,7 +21,9 @@ mingw32-make.exe
 ```
 
 ### Resultat
-Här e tiden jag fick på min sega dator:
-![image](https://github.com/Phillezi/HI1029_LAB3_Uppg7_C/assets/112874974/16fd7764-d1fb-404b-a069-a947caf2781d)
+Här e tiderna jag fick på min sega dator:
+
+![image](https://github.com/Phillezi/HI1029_LAB3_Uppg7_C/assets/112874974/7d4b2789-2fbf-415f-9672-970ac052e202)
+
 
 
