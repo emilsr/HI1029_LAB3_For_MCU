@@ -11,6 +11,13 @@
 
 #define PIECE_2_ALT 0b110001
 
+//#define COUNT_FUNCTION_CALLS
+
+#ifdef COUNT_FUNCTION_CALLS
+int globl_num_loops = 0;
+#endif
+
+
 uint32_t put(uint32_t board, uint32_t pos, uint32_t piece) {
     return (uint32_t)(board | (piece << pos));
 }
@@ -83,7 +90,9 @@ void printBoard(uint32_t board) {
  * @return uint8_t the nr of solutions found.
  */
 uint8_t solve(uint32_t board, uint32_t pos, uint8_t piecesPlaced) {
-
+    #ifdef COUNT_FUNCTION_CALLS
+    globl_num_loops++;
+    #endif
     if(piecesPlaced >= 8) {
         return 1;
     }
@@ -121,19 +130,23 @@ uint8_t solve(uint32_t board, uint32_t pos, uint8_t piecesPlaced) {
  * @return uint8_t the nr of solutions found.
  */
 uint8_t solve2(uint32_t board, uint32_t pos, uint8_t piecesPlaced) {
-    pos = nextEmpty(board, pos);
+    #ifdef COUNT_FUNCTION_CALLS
+    globl_num_loops++;
+    #endif
 
     if(piecesPlaced >= 8) {
         return 1;
     }
 
+    pos = nextEmpty(board, pos);
+
     if(pos > 19) {
         return 0;
     }
 
-    if(isUnsolvable(board, pos)) {
+    /*if(isUnsolvable(board, pos)) { // denna behövs inte i denhär
         return 0;
-    }
+    }*/
 
     uint8_t nrOfSolutions = 0;
     if((pos+1) % 5 != 0) {              // får inte vara sista i en rad
@@ -256,9 +269,22 @@ void doSolve(uint32_t i) {
 int main(int argc, char **argv) {
     printf("DOING NORMAL SOLVING:\n");
     for(int i = 0; i < 25; i++) {
+        #ifdef COUNT_FUNCTION_CALLS
+        globl_num_loops = 0;
+        #endif
         doSolve(i);
+        #ifdef COUNT_FUNCTION_CALLS
+        printf("Did %d function calls\n", globl_num_loops);
+        globl_num_loops = 0;
+        #endif
         doSolve2(i);
+        #ifdef COUNT_FUNCTION_CALLS
+        printf("Did %d function calls\n", globl_num_loops);
+        #endif
     }
+    #ifdef COUNT_FUNCTION_CALLS
+    return 0;
+    #endif
     printf("Starting BENCHMARKs:\n");
     bench(0);
     bench(1);
