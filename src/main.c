@@ -12,11 +12,11 @@
 #define PIECE_2_ALT 0b110001
 
 //#define COUNT_FUNCTION_CALLS
+#define BENCHMARK_TRIALS 10000
 
 #ifdef COUNT_FUNCTION_CALLS
 int globl_num_loops = 0;
 #endif
-
 
 uint32_t put(uint32_t board, uint32_t pos, uint32_t piece) {
     return (uint32_t)(board | (piece << pos));
@@ -60,11 +60,10 @@ uint32_t next(uint32_t pos) {
  * @return uint32_t the next empty position.
  */
 uint32_t nextEmpty(uint32_t board, uint32_t pos) {
-    /* Used this at first
+    // Used this at first
     while((board >> pos & 1)) pos++;
     return pos;
-    */
-    return pos + (uint32_t)__builtin_ctz(~(board >> pos));
+    //return pos + (uint32_t)__builtin_ctz(~(board >> pos));
 }
 /**
  * @brief A function that prints the board.
@@ -144,7 +143,7 @@ uint8_t solve2(uint32_t board, uint32_t pos, uint8_t piecesPlaced) {
         return 0;
     }
 
-    /*if(isUnsolvable(board, pos)) { // denna behövs inte i denhär
+    /*if(isUnsolvable(board, pos)) { // denna behövs inte i denhär ?
         return 0;
     }*/
 
@@ -169,7 +168,7 @@ uint8_t solve2(uint32_t board, uint32_t pos, uint8_t piecesPlaced) {
 }
 
 
-void doSolveBench2(uint32_t i, double times[25][40], int trial) {
+void doSolveBench2(uint32_t i, double times[25][BENCHMARK_TRIALS], int trial) {
     struct timespec start, end;
     uint32_t board = put(0, i, 1);
     clock_gettime(CLOCK_MONOTONIC, &start);
@@ -182,7 +181,7 @@ void doSolveBench2(uint32_t i, double times[25][40], int trial) {
     times[i][trial] = elapsed_ns;
 }
 
-void doSolveBench(uint32_t i, double times[25][40], int trial) {
+void doSolveBench(uint32_t i, double times[25][BENCHMARK_TRIALS], int trial) {
     struct timespec start, end;
     uint32_t board = put(0, i, 1);
     clock_gettime(CLOCK_MONOTONIC, &start);
@@ -195,7 +194,7 @@ void doSolveBench(uint32_t i, double times[25][40], int trial) {
     times[i][trial] = elapsed_ns;
 }
 
-void getResults(double times[25][40], int pos, double *pSum, double *pMax, double *pMin, int nrOfRuns) {
+void getResults(double times[25][BENCHMARK_TRIALS], int pos, double *pSum, double *pMax, double *pMin, int nrOfRuns) {
     for (int trial = 0; trial < nrOfRuns; trial++) {
         double time = times[pos][trial];
         (*pSum) += time;
@@ -209,8 +208,8 @@ void getResults(double times[25][40], int pos, double *pSum, double *pMax, doubl
 }
 
 void bench(uint8_t use_min_loop) {
-    double times[25][40] = {0};
-    int num_trials = 40;
+    double times[25][BENCHMARK_TRIALS] = {0};
+    int num_trials = BENCHMARK_TRIALS;
 
     for (int trial = 0; trial < num_trials; trial++) {
         for (int i = 0; i < 25; i++) {
