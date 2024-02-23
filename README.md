@@ -21,11 +21,11 @@ mingw32-make.exe
 ```
 
 ### Resultat
-Här e tiderna jag fick på min sega dator:
+Här e tiderna jag fick på min sega dator (WSL2 Ubuntu, fick likvärdiga resultat i windows på samma dator, i7-4790k):
 
 ![image](https://github.com/Phillezi/HI1029_LAB3_Uppg7_C/assets/112874974/7d4b2789-2fbf-415f-9672-970ac052e202)
 
-På min laptop:
+På min laptop (Ubuntu, i7-1280p):
 ![image](https://github.com/Phillezi/HI1029_LAB3_Uppg7_C/assets/112874974/8a7513b9-b962-4c8b-bcda-8d0c68f47551)
 
 
