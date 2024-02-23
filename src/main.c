@@ -147,7 +147,7 @@ uint8_t solve2(uint32_t board, uint32_t pos, uint8_t piecesPlaced) {
             nrOfSolutions += solve2(put(board, pos, PIECE_4), pos+2, piecesPlaced+1);
         }
     }
-    if((pos) % 5 != 0 && pos != 0) {    // får inte vara första i en rad
+    if((pos) % 5 != 0) {    // får inte vara första i en rad
         if(canPlace(board, pos, PIECE_2_ALT)) {
             nrOfSolutions += solve2(put(board, pos, PIECE_2_ALT), pos+1, piecesPlaced+1);
         }
