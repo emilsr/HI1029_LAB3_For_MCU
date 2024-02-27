@@ -207,34 +207,6 @@ void getResults(double times[25][BENCHMARK_TRIALS], int pos, double *pSum, doubl
     }
 }
 
-void bench(uint8_t use_min_loop) {
-    double times[25][BENCHMARK_TRIALS] = {0};
-    int num_trials = BENCHMARK_TRIALS;
-
-    for (int trial = 0; trial < num_trials; trial++) {
-        for (int i = 0; i < 25; i++) {
-            if(use_min_loop) {
-                doSolveBench2(i, times, trial);
-            } doSolveBench(i, times, trial);
-        }
-    }
-    if(use_min_loop) {
-        printf("\nBenchmark Results with less looping:\n");
-    } else {
-        printf("\nBenchmark Results:\n");
-    }
-    for (int i = 0; i < 25; i++) {
-        double sum = 0;
-        double max_time = 0;
-        double min_time = DBL_MAX; // Set initial min time to the highest possible double value
-
-        getResults(times, i, &sum, &max_time, &min_time, num_trials);
-
-        double avg_time = sum / num_trials;
-        printf("Position %d:\tAvg: %f ns,\tMax: %f ns,\tMin: %f ns\n", i, avg_time, max_time, min_time);
-    }
-}
-
 void doSolve2(uint32_t i) {
     uint32_t board = put(0, i, 1);
     struct timespec start, end;
@@ -276,20 +248,53 @@ int main(int argc, char **argv) {
         printf("Did %d function calls\n", globl_num_loops);
         globl_num_loops = 0;
         #endif
+        /*
         doSolve2(i);
         #ifdef COUNT_FUNCTION_CALLS
         printf("Did %d function calls\n", globl_num_loops);
         #endif
+        */
     }
     #ifdef COUNT_FUNCTION_CALLS
     return 0;
     #endif
     printf("Starting BENCHMARKs:\n");
-    bench(0);
-    bench(1);
+    //bench(0);
+    //bench(1);
     
     return 0;
 }
+///////// ///////// ///////// ///////// ///////// ///////// ///////// ///////// ///////// ///////// ///////// 
+/*    /////////Should't need this///////// 
+void bench(uint8_t use_min_loop) {
+    double times[25][BENCHMARK_TRIALS] = {0};
+    int num_trials = BENCHMARK_TRIALS;
+
+    for (int trial = 0; trial < num_trials; trial++) {
+        for (int i = 0; i < 25; i++) {
+            if(use_min_loop) {
+                doSolveBench2(i, times, trial);
+            } doSolveBench(i, times, trial);
+        }
+    }
+    if(use_min_loop) {
+        printf("\nBenchmark Results with less looping:\n");
+    } else {
+        printf("\nBenchmark Results:\n");
+    }
+    for (int i = 0; i < 25; i++) {
+        double sum = 0;
+        double max_time = 0;
+        double min_time = DBL_MAX; // Set initial min time to the highest possible double value
+
+        getResults(times, i, &sum, &max_time, &min_time, num_trials);
+
+        double avg_time = sum / num_trials;
+        printf("Position %d:\tAvg: %f ns,\tMax: %f ns,\tMin: %f ns\n", i, avg_time, max_time, min_time);
+    }
+}
+*/
+///////// ///////// ///////// ///////// ///////// ///////// ///////// ///////// ///////// ///////// ///////// 
 
 
 /* UNUSED CODE
